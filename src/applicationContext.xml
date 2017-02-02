@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+<!-- 配置自动扫描的包 -->
+	<context:component-scan base-package="org.acg"></context:component-scan>
+
+<!-- 配置数据源 [[ -->
+	<!-- 导入数据库配置资源文件 -->
+	<context:property-placeholder location="classpath:db.properties"/>
+	<bean id="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="user" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+	</bean>
+<!-- 配置数据源 ]] -->
+
+<!-- 配置JPA的EntityManagerFactory [[ -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<!-- 配置数据源 -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 配置JPA实现适配器 -->
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"></bean>
+		</property>
+		<!-- 配置自动扫描@entity注解的包 -->
+		<property name="packagesToScan" value="org.acg"></property>
+		<!-- 配置JPA基本属性 -->
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.connection.characterEncoding">UTF-8</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+			</props>
+		</property>
+		<property name="sharedCacheMode" value="ENABLE_SELECTIVE"></property>
+	</bean>
+<!-- 配置JPA的EntityManagerFactory ]] -->
+
+<!-- 配置声明式事务 [[ -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory"></property>
+	</bean>
+<!-- 配置声明式事务 ]] -->
+
+<!-- 配置基于注解的事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+<!-- 装载Strtus2中Action[[ -->
+	<bean id="accountAction"
+		class="org.acg.action.main.AccountAction"></bean>
+	<bean id="indexAction"
+		class="org.acg.action.main.IndexAction"></bean>
+	<bean id="shopAction"
+		class="org.acg.action.main.ShopAction"></bean>
+	<bean id="paletteActiion"
+		class="org.acg.action.main.PaletteAction"></bean>
+	<bean id="gameAction"
+		class="org.acg.action.main.GameAction"></bean>
+	<bean id="baseAdminAction"
+		class="org.acg.action.admin.BaseAdminAction"></bean>
+	<bean id="videoAdminAction"
+		class="org.acg.action.admin.VideoAdminAction"></bean>
+	<bean id="otherAdminAction"
+		class="org.acg.action.admin.OtherAdminAction"></bean>
+<!-- 装载Strtus2中Action]] -->
+
+<!-- 配置Shiro [[ -->
+	 <!-- 1.配置SecurityManager -->
+	    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+	        <property name="cacheManager" ref="cacheManager"/>
+	<!--         <property name="authenticator" ref="authenticator"/>
+	 -->     
+	 		<property name="realm" ref="jdbcRealm"></property>
+	 </bean>
+	
+	    <!-- 2.配置CacheManager:需要加入ehcache的jar包以及配置文件 -->
+	    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+	        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+	    </bean>
+	
+		<!-- 3.配置Realm:直接配置实现了Realm接口的bean -->
+		<!-- 配置认证器 -->
+		<bean id="authenticator"
+			class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+			<property name="realms">
+				<list>
+					<ref bean="jdbcRealm"/>
+				</list>
+			</property>
+		</bean>
+		
+	    <bean id="jdbcRealm" class="org.acg.shiro.ShiroRealm">
+	    	<!-- 配置匹配的凭证 -->
+	    	<property name="credentialsMatcher">
+	    		<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+	    			<!-- 指定加密的算法 -->
+	    			<property name="hashAlgorithmName" value="MD5"></property>
+	    			<!-- 指定加密的次数 -->
+	    			<property name="hashIterations" value="1024"></property>
+	    		</bean>
+	    	</property>
+	    </bean>
+	
+	    <!-- 4.配置bean的生命周期管理器,可以自动的来调用配置在Spring IOC中的shiro的声明周期方法 -->
+	    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+	
+	    <!-- 5.启用IOC容器中使用shiro的注解,但必须在配置了lifecycleBeanPostProcessor后才可以使用 -->
+	    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+	          depends-on="lifecycleBeanPostProcessor"/>
+	    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+	        <property name="securityManager" ref="securityManager"/>
+	    </bean>
+	
+	   <!-- 6.配置shiroFilter:id必须和web.xml文件中配置的shiroFilter的<filter-name>保持一致,
+	   		如果不一致会抛出NoSuchBeanDefinitionException,因为Shiro会在IOC中查找和<filter-name>名字对应的filter bean -->
+	    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+	        <property name="securityManager" ref="securityManager"/>
+	        <property name="loginUrl" value="/account-login-show"/>
+	        <property name="successUrl" value="/admin/index.html"/>
+	        <property name="unauthorizedUrl" value="/admin/index.html#/"/>
+	        <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"></property>
+	       	<!-- 配置那些页面需要收到保护,以及访问对应页面需要的权限, 格式: 路径 = 权限[参数]
+	       		1. anno - 可以被匿名访问
+	       		2. 未配置的路径可以被匿名访问
+	       		3. authc - 必须认证(登录)后才可以使用
+	       		4. logout - 登出
+	       	 -->
+	<!--         <property name="filterChainDefinitions">
+	            <value>
+	                /login.jsp = anon
+	                /shiro/shiroLogin = anon
+	                /shiro/exit = logout
+	                /user.jsp = roles[user]
+	                /admin.jsp = roles[admin]
+	                /** = authc
+	            </value>
+	        </property> -->
+	    </bean>
+	    
+	    <!-- 配置一个bean,该bean实际上是一个Map,通过实例工厂的方式 -->
+	    <bean id="filterChainDefinitionMap"
+	    	 factory-bean="filterChainDefinitionMapBuilder" factory-method="buildFilterChainDefinitionMap"></bean>
+	    <bean id="filterChainDefinitionMapBuilder"
+	    	class="org.acg.shiro.FilterChainDefinitionMapBuilder"></bean>
+	    
+<!-- 配置Shiro ]] -->
+
+</beans>

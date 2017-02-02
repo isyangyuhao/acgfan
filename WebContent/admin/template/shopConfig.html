@@ -1,0 +1,246 @@
+<!-- 商品信息统计 -->
+<h2 class="page-header">商品信息统计 <small> 左表:各价格区间商品售出所占百分比 | 右表:各价格区间商品库存所占百分比</small></h2>
+<style>
+.MyText {
+	text-anchor: middle;
+	font-family: arial;
+	font-size: 10px;
+	fill:white;
+}
+</style>
+<div id="priceCount" class=""></div>
+<script>
+	function priceCount() {
+		var body = d3.select("#priceCount");
+
+		var width = 250;
+		var height = 250;
+
+		var svg = body.append("svg")
+					.attr("width", 400)
+					.attr("height", 400);
+
+		var dataset = [43, 22, 19, 13, 3];
+		var titleset = ["<$50: ", "$50-$100: ", "$100-$300: ", "$300-500: ", ">$500: "];
+
+		var pie = d3.layout.pie();
+
+		var piedata = pie(dataset);
+
+		var innerRadius = 0;
+		var outerRadius = 120;
+		var arc = d3.svg.arc()
+					.innerRadius(innerRadius)
+					.outerRadius(outerRadius);
+
+		var color = d3.scale.category10();
+
+		var arcs = svg.selectAll(".arcGroups")
+					.data(piedata)
+					.enter()
+					.append("g")
+					.attr("class","arcGroups")
+					.attr("transform","translate(200,200)");
+
+		arcs.append("path")
+			.attr("fill",function(d,i){
+				return color(i);
+			})
+			.attr("d", function(d){
+				return arc(d);
+			});
+
+		arcs.append("text")
+			.attr("class","MyText")
+			.attr("transform", function(d){
+				var center = arc.centroid(d);
+				return "translate(" + 
+					center[0] * 1.4 + "," + 
+					center[1] * 1.4 + ")";
+			})
+			.text(function(d, i) {
+				return titleset[i] + d.value + "%";
+			})
+	}
+	priceCount();
+</script>
+
+<script>
+	function stockCount() {
+		var body = d3.select("#priceCount");
+
+		var width = 250;
+		var height = 250;
+
+		var svg = body.append("svg")
+					.attr("width", 400)
+					.attr("height", 400);
+
+		var dataset = [10, 20, 30, 24, 12];
+		var titleset = ["<$50: ", "$50-$100: ", "$100-$300: ", "$300-500: ", ">$500: "];
+
+		var pie = d3.layout.pie();
+
+		var piedata = pie(dataset);
+
+		var innerRadius = 0;
+		var outerRadius = 120;
+		var arc = d3.svg.arc()
+					.innerRadius(innerRadius)
+					.outerRadius(outerRadius);
+
+		var color = d3.scale.category10();
+
+		var arcs = svg.selectAll(".arcGroups")
+					.data(piedata)
+					.enter()
+					.append("g")
+					.attr("class","arcGroups")
+					.attr("transform","translate(200,200)");
+
+		arcs.append("path")
+			.attr("fill",function(d,i){
+				return color(i);
+			})
+			.attr("d", function(d){
+				return arc(d);
+			});
+
+		arcs.append("text")
+			.attr("class","MyText")
+			.attr("transform", function(d){
+				var center = arc.centroid(d);
+				return "translate(" + 
+					center[0] * 1.4 + "," + 
+					center[1] * 1.4 + ")";
+			})
+			.text(function(d, i) {
+				return titleset[i] + d.value + "%";
+			})
+	}
+	stockCount();
+</script>
+	
+
+<!-- 周边商城 [[-->
+	<h2 class="page-header">商品管理 <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#addShopAdmin">添加</button> </h2>
+	<div class="table-responsive">
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>编号ID</th>
+	        <th>商品名</th>
+	        <th>商品展示图链接</th>
+	        <th>价格</th>
+	        <th>库存</th>
+	        <th>操作</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="item in shopData">
+	        <td>{{item.id}}</td>
+	        <td>{{item.name}}</td>
+	        <td>{{item.photoDesc}}</td>
+	        <td>{{item.price}}</td>
+	        <td>{{item.stock}}</td>
+	        <td>
+	       	 	<button ng-click="alterShopBtn(item.id, item.name, item.photoDesc, item.price, item.stock)" class="btn btn-default btn-xs" data-toggle="modal" data-target="#shopAdmin">修改</button>
+	       	 	<button ng-click="deleteShop(item.id)" class="btn btn-default btn-xs" >删除</button>
+	        </td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+<!-- 视频相关管理 ]]-->
+	
+<!-- 模态框 [[-->
+	<!-- #修改商品管理模态框 -->
+	<form action="/acgfan/index-index-show" method="post">
+		<div class="modal fade" id="shopAdmin" tabindex="-1" role="dialog" aria-labelledby="shopAdmin" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">商品管理</h4>
+		      </div>
+		      <div class="modal-body">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">商品名称</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterName">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">	商品展示图链接</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterSrc">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">价格</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterPrice">
+				  </div>
+				   <div class="form-group">
+				    <label for="exampleInputPassword1">库存</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterStock">
+				  </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button ng-click="alterShopSubmit()" type="submit" class="btn btn-primary" data-dismiss="modal">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+	
+	<!-- #删除确认莫模态框-->
+	<form action="/acgfan/index-index-show" method="post">
+		<div class="modal fade bs-example-modal-sm" id="shopDeleteAdmin" tabindex="-1" role="dialog" aria-labelledby="shopDeleteAdmin" aria-hidden="true">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">您确认删除吗?</h4>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button type="submit" class="btn btn-primary" data-dismiss="modal">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+	
+	<!-- #添加商品模态框 -->
+	<form action="#!" method="post">
+		<div class="modal fade" id="addShopAdmin" tabindex="-1" role="dialog" aria-labelledby="addShopAdmin" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">添加商品</h4>
+		      </div>
+		      <div class="modal-body">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">商品名</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="addName">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">商品展示图链接</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="addSrc">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">价格</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="addPrice">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">库存</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="addStock">
+				  </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button ng-click="addShop()" type="submit" class="btn btn-primary"  data-dismiss="modal">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+<!-- 模态框 ]]-->

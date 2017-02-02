@@ -1,0 +1,30 @@
+<!-- 弹幕管理-->
+<h2 class="page-header">弹幕评论管理</h2>
+	<div class="table-responsive">
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>编号ID</th>
+	        	<th>内容</th>
+	        <th>颜色</th>
+	        <th>位置</th>
+	        <th>尺寸</th>
+	        <th>出现时间(100ms)</th>
+	        <th>操作</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="item in danmuData">
+	        <td>{{item.id}}</td>
+	        <td>{{item.text}}</td>
+	        <td>{{item.color}}</td>
+	        <td>{{item.position}}</td>
+	        <td>{{item.size}}</td>
+	        <td>{{item.time}}</td>
+	        <td>
+	        		<button ng-click="deleteDanmu(item.id)" class="btn btn-default btn-xs" data-toggle="modal" data-target="#indexShowAdmin">删除</button>
+	        </td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>

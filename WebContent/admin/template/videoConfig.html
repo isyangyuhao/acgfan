@@ -1,0 +1,194 @@
+<!-- 视频类型数统计 -->
+<h2 class="page-header">视频类型数统计 <small> x:视频类型ID | y:拥有视频数</small></h2>
+<style type="text/css">
+		.axis path,
+		.axis line {
+			fill: none;
+			stroke: black;
+			shape-rendering: crispedges;	
+		}
+		.axis text {
+			font-family: sans-serif;
+			font-size: 11px;
+		}
+		.myRect {
+			fill: steelblue;
+		}
+		.myText {
+			fill: white;
+			text-anchor: middle;
+		}
+	</style>
+<div id="videoTypeNum"></div>
+<script>
+	function videoTypeNum() {
+		var body = d3.select("#videoTypeNum");
+		var svg = body.append("svg")
+						.attr("width", 1000)
+						.attr("height", 400);
+
+		//2. 坐标轴
+		var xScale = d3.scale.ordinal()
+							.domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+							.rangeRoundBands([0, 500]);
+		var yScale = d3.scale.linear()
+								.domain([100, 0])
+								.range([0, 250]);
+		var xAxis = d3.svg.axis()
+						.scale(xScale)
+						.orient("bottom");
+		var gxAxis = svg.append("g")
+						.attr("class", "axis")
+						.attr("transform", "translate(30, 300)")
+						.call(xAxis);
+		var yAxis = d3.svg.axis()
+						.scale(yScale)
+						.orient("left");
+		var gyAxis = svg.append("g")
+						.attr("class", "axis")
+						.attr("transform", "translate(30, 50)")
+						.call(yAxis);
+		//3. 完整的柱状图
+		var dataSet = [47, 21, 43, 46, 67, 54, 45, 58, 54, 31];
+		yScale.domain([0, 100]);
+		var rects = svg.selectAll(".myRect")
+						.data(dataSet)
+						.enter()
+						.append("rect")
+						.attr("class", "myRect")
+						.attr("transform", "translate(30, 50)")
+						.attr("x", function(d, i) {
+							return xScale(i);
+						})
+						.attr("y", function(d, i) {
+							return 400 - 150 - yScale(d);
+						})
+						.attr("width", function() {
+							return xScale.rangeBand() - 4;
+						})
+						.attr("height", function(d) {
+							return yScale(d);
+						});
+		var texts = svg.selectAll(".myText")
+						.data(dataSet)
+						.enter()
+						.append("text")
+						.attr("class", "myText")
+						.attr("transform", "translate(30, 50)")
+						.attr("x", function(d, i) {
+							return xScale(i);
+						})
+						.attr("y", function(d, i) {
+							return 400 - 150 - yScale(d);
+						})
+						.attr("dx", function(d, i) {
+							return xScale.rangeBand() / 2;
+						})
+						.attr("dy", function(d, i) {
+							return 15;
+						})
+						.text(function(d, i) {
+							return d;
+						});
+	}
+	videoTypeNum();
+</script>
+
+<!-- 视频相关管理 [[-->
+	<h2 class="page-header">视频管理 <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#addVideoAdmin">添加</button> </h2>
+	<div class="table-responsive">
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>编号ID</th>
+	        <th>视频名</th>
+	        <th>视频展示图链接</th>
+	        <th>播放地址</th>
+	        <th>操作</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="item in videoData">
+	        <td>{{item.id}}</td>
+	        <td>{{item.name}}</td>
+	        <td>{{item.src}}</td>
+	        <td>{{item.avSrc}}</td>
+	        <td>
+	        	<button ng-click="alterVideoBtn(item.id, item.name, item.src, item.avSrc)" class="btn btn-default btn-xs" data-toggle="modal" data-target="#videoAdmin">修改</button>
+	       	 	<button ng-click="deleteVideoBtn(item.id)" class="btn btn-default btn-xs" >删除</button>
+	        </td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+<!-- 视频相关管理 ]]-->
+	
+<!-- 模态框 [[-->
+	<!-- #修改视频管理模态框 -->
+	<form action="#/" method="post">
+		<div class="modal fade" id="videoAdmin" tabindex="-1" role="dialog" aria-labelledby="videoAdmin" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">视频管理</h4>
+		      </div>
+		      <div class="modal-body">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">视频名称</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterVideoName">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">视频展示图链接</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterVideoSrc">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">播放地址</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterVideoAvSrc">
+				  </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button ng-click="alterVideoSubmit()" type="submit" class="btn btn-primary" data-dismiss="modal">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+	
+	<!-- #添加视频模态框 -->
+	<form action="/acgfan/index-index-show" method="post">
+		<div class="modal fade" id="addVideoAdmin" tabindex="-1" role="dialog" aria-labelledby="addVideoAdmin" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">添加视频</h4>
+		      </div>
+		      <div class="modal-body">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">视频名称</label>
+				    <input type="text" class="form-control" ng-model="addVideoName">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">视频展示图链接</label>
+				    <input type="text" class="form-control" ng-model="addVideoSrc">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">播放地址</label>
+				    <input type="text" class="form-control" ng-model="addVideoAvSrc">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">视频类型ID</label>
+				    <input type="text" class="form-control" ng-model="addVideoTypeId">
+				  </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button ng-click="addVideoSubmit()" type="submit" class="btn btn-primary" data-dismiss="modal">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+<!-- 模态框 ]]-->

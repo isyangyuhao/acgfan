@@ -1,0 +1,49 @@
+<!-- 画板管理 [[-->
+	<h2 class="page-header">画板管理</h2>
+	<div class="table-responsive">
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>编号ID</th>
+	        <th>画板名</th>
+	        <th>画板链接</th>
+	        <th>类型</th>
+	        <th>发布用户</th>
+	        <th>操作</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="item in paletteData">
+	        <td>{{item.id}}</td>
+	        <td>{{item.name}}</td>
+	        <td>{{item.src}}</td>
+	        <td>{{item.typeName}}</td>
+	        <td>{{item.userName}}</td>
+	        <td>
+	       	 	<button ng-click="deletePalette(item.id)" class="btn btn-default btn-xs">删除</button>
+	        </td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+<!-- 视频相关管理 ]]-->
+	
+<!-- 模态框 [[-->
+	<!-- #删除确认莫模态框-->
+	<form action="/acgfan/index-index-show" method="post">
+		<div class="modal fade bs-example-modal-sm" id="paletteDeleteAdmin" tabindex="-1" role="dialog" aria-labelledby="paletteDeleteAdmin" aria-hidden="true">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">您确认删除吗?</h4>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button type="submit" class="btn btn-primary">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+<!-- 模态框 ]]-->

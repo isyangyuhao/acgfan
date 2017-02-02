@@ -1,0 +1,115 @@
+<!-- 展示轮播图管理 [[ -->
+	<!-- #首页展示轮播图-->
+	<h2 class="page-header">首页轮播图管理</h2>
+	<div class="table-responsive">
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>编号ID</th>
+	        <th>轮播图链接地址</th>
+	        <th>文字介绍</th>
+	        <th>操作</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="item in indexData">
+	        <td>{{item.id}}</td>
+	        <td>{{item.src}}</td>
+	        <td>{{item.title}}</td>
+	        <td>
+	        		<button ng-click="indexAlterBtn(item.id, item.title, item.src)" class="btn btn-default btn-xs" data-toggle="modal" data-target="#indexShowAdmin">修改</button>
+	        </td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+	<br>
+	<!-- #视频展示轮播图-->
+	<h2 class="page-header">视频轮播图管理</h2>
+	<div class="table-responsive">
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>编号ID</th>
+	        <th>轮播图链接地址</th>
+	        <th>文字介绍</th>
+	        <th>视频类型</th>
+	        <th>操作</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="item in videoData">
+	        <td>{{item.id}}</td>
+	        <td>{{item.src}}</td>
+	        <td>{{item.title}}</td>
+	        <td>{{item.videoType.typeName}}</td>
+	        <td>
+	        	<button ng-click="videoAlterBtn(item.id, item.src, item.title, item.videoType.id)" class="btn btn-default btn-xs" data-toggle="modal" data-target="#videoShowAdmin">修改</button>
+	        </td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+<!-- 展示轮播图管理 [[ -->
+	
+<!--模态框 [[ -->
+<!-- #首页轮播图修改 -->
+	<form action="/acgfan/index-index-show" method="post">
+		<div class="modal fade" id="indexShowAdmin" tabindex="-1" role="dialog" aria-labelledby="indexShowAdmin" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">首页轮播图管理</h4>
+		      </div>
+		      <div class="modal-body">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">轮播图链接地址</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterIndexSrc">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">文字介绍</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterIndexTitle">
+				  </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button ng-click="indexAlterSubmit()" type="submit" class="btn btn-primary" data-dismiss="modal">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+	
+<!-- #视频轮播图修改 -->
+	<form action="/acgfan/index-index-show" method="post">
+		<div class="modal fade" id="videoShowAdmin" tabindex="-1" role="dialog" aria-labelledby="videoShowAdmin" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">首页轮播图管理</h4>
+		      </div>
+		      <div class="modal-body">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">轮播图链接地址</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterVideoSrc">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">文字介绍</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterVideoTitle">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">视频类型ID</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterVideoTypeId">
+				  </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button ng-click="videoAlterSubmit()" type="submit" class="btn btn-primary"  data-dismiss="modal">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+<!--模态框 [[ -->

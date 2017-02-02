@@ -1,0 +1,24 @@
+<!-- 视频评论管理-->
+<h2 class="page-header">视频评论管理</h2>
+	<div class="table-responsive">
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>编号ID</th>
+	        <th>评论内容</th>
+	        <th>评论用户</th>
+	        <th>操作</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="item in commentData">
+	        <td>{{item.id}}</td>
+	        <td>{{item.content}}</td>
+	        <td>{{item.user.username}}</td>
+	        <td>
+	        		<button ng-click="deleteComment(item.id)" class="btn btn-default btn-xs" data-toggle="modal" data-target="#indexShowAdmin">删除</button>
+	        </td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>

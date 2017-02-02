@@ -1,0 +1,158 @@
+<!-- 游戏相关管理 [[-->
+	<!-- #推荐游戏管理 -->
+	<h2 class="page-header">推荐游戏管理</h2>
+	<div class="table-responsive">
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>编号ID</th>
+	        <th>推荐名</th>
+	        <th>推荐内容</th>
+	        <th>游戏图片链接地址</th>
+	        <th>操作</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="item in gameData">
+	        <td>{{item.id}}</td>
+	        <td>{{item.name}}</td>
+	        <td>{{item.title}}</td>
+	        <td>{{item.src}}</td>
+	        <td>
+	       	 	<button ng-click="alterGameBtn(item.id, item.name, item.title, item.src)" class="btn btn-default btn-xs" data-toggle="modal" data-target="#gameAdmin">修改</button>
+	        </td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+	<br>
+	<!-- #游戏列表管理 -->
+	<h2 class="page-header">游戏列表管理 <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#addListAdmin">添加</button> </h2>
+	<div class="table-responsive">
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>编号ID</th>
+	        <th>游戏名</th>
+	        <th>类别</th>
+	        <th>操作</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="item in listData">
+	        <td>{{item.id}}</td>
+	        <td>{{item.name}}</td>
+	        <td>
+	        	<div ng-if="item.typeId == 1">新游推荐</div>
+	        	<div ng-if="item.typeId == 2">热门推荐</div>
+	        	<div ng-if="item.typeId == 3">网游推荐</div>
+	        </td>
+	        <td>
+	       	 	<button ng-click="alterListBtn(item.id, item.name, item.typeId)" class="btn btn-default btn-xs" data-toggle="modal" data-target="#gameListAdmin">修改</button>
+	       	 	<button ng-click="deleteList(item.id)" class="btn btn-default btn-xs" >删除</button>
+	        </td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+	
+<!-- 游戏相关管理 ]]-->
+	
+<!-- 模态框 [[-->
+	<!-- #推荐游戏管理模态框 -->
+	<form action="#/" method="post">
+		<div class="modal fade" id="gameAdmin" tabindex="-1" role="dialog" aria-labelledby="gameAdmin" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">推荐游戏管理</h4>
+		      </div>
+		      <div class="modal-body">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">推荐名</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterGameName">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">推荐内容</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterGameTitle">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">游戏图片链接地址</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterGameSrc">
+				  </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button ng-click="alterGameSubmit()" type="submit" class="btn btn-primary" data-dismiss="modal">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+		
+	<!-- #修改游戏列表模态框 -->
+	<form action="#/" method="post">
+		<div class="modal fade" id="gameListAdmin" tabindex="-1" role="dialog" aria-labelledby="gameListAdmin" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">修改游戏列表</h4>
+		      </div>
+		      <div class="modal-body">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">游戏名</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterListName">
+				  </div>
+ 				  <div class="form-group">
+				    <label for="exampleInputEmail1">类型Id</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="alterListTypeId">
+				  </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button ng-click="alterListSubmit()" type="submit" class="btn btn-primary" data-dismiss="modal">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+	
+	<!-- #添加游戏列表模态框 -->
+	<form action="/acgfan/index-index-show" method="post">
+		<div class="modal fade" id="addListAdmin" tabindex="-1" role="dialog" aria-labelledby="addListAdmin" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">添加游戏列表</h4>
+		      </div>
+		      <div class="modal-body">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1" >游戏名</label>
+				    <input type="text" class="form-control" id="" value="" ng-model="addListName">
+				  </div>
+				    <div class="form-group">
+					    <div class="col-sm-offset-2 col-sm-10">
+					      <div class="checkbox">
+					        <label>
+					           <input type="radio" name="type" ng-click="addListTypeId=1"> 新游推荐 &nbsp;|&nbsp; 
+					           <input type="radio" name="type" ng-click="addListTypeId=2"> 热门推荐 &nbsp;|&nbsp;
+					           <input type="radio" name="type" ng-click="addListTypeId=3"> 网游推荐
+					        </label>
+					      </div>
+					    </div>
+					    <br>
+					  </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button ng-click="addList()" type="submit" class="btn btn-primary" data-dismiss="modal">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+	
+<!-- 模态框 ]]-->

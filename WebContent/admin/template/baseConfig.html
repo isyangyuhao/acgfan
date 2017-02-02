@@ -1,0 +1,101 @@
+<!-- 视频主站展示类型设置 [[ -->
+	<!-- #视频主站展示类型设置-->
+	<h2 class="page-header">视频主站展示类型设置</h2>
+	<div class="table-responsive">
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>编号ID</th>
+	        <th>视频类型名</th>
+	        <th>类型介绍</th>
+	        <th>操作</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="item in types">
+	        <td>{{item.id}}</td>
+	        <td>{{item.typeName}}</td>
+	        <td>{{item.typeIntroduce}}</td>
+	        <td><button ng-click="alterType(item.id, item.typeName, item.typeIntroduce)" class="btn btn-default btn-xs" data-toggle="modal" data-target="#videoTypeAdmin">修改</button></td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+	<br>
+	<!-- #友情链接设置 -->
+	<h2 class="page-header">友情链接设置</h2>
+	<div class="table-responsive">
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>编号ID</th>
+	        <th>友情链接名</th>
+	        <th>链接地址</th>
+	        <th>操作</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="item in friendLinkData">
+	        <td>{{item.id}}</td>
+	        <td>{{item.name}}</td>
+	        <td>{{item.src}}</td>
+	        <td><button ng-click="alterLink(item.id, item.name, item.src)" class="btn btn-default btn-xs" data-toggle="modal" data-target="#friendLinkAdmin">修改</button></td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+<!-- 视频主站展示类型设置 [[ -->
+
+<!-- 模态框 [[ -->
+	<!-- #主站展示类型修改模态框 -->
+	<form action="#/" method="post">
+		<div class="modal fade" id="videoTypeAdmin" tabindex="-1" role="dialog" aria-labelledby="videoTypeAdmin" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">视频主站展示类型设置</h4>
+		      </div>
+		      <div class="modal-body">
+				<tr>
+			        <td><strong>ID : </strong>{{alterTypeId}}</td> &nbsp;|&nbsp; 
+			        <td><strong>视频类型名 : </strong><input type="text" ng-model="alterTypeName"/></td> &nbsp;|&nbsp; 
+			        <td><strong>类型介绍 : </strong><input type="text"  ng-model="alterTypeIntroduce"/></td>
+			    </tr>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button ng-click=alterTypeSubmit() type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+	
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+
+	<!-- #友情链接修改模态框 -->
+	<form action="#!" method="post">
+		<div class="modal fade" id="friendLinkAdmin" tabindex="-1" role="dialog" aria-labelledby="friendLinkAdmin" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="">视频主站展示类型设置</h4>
+		      </div>
+		      <div class="modal-body">
+				<tr>
+			        <td><strong>ID : </strong>{{alterFriendId}}</td> &nbsp;|&nbsp; 
+			        <td><strong>友情链接名 : </strong><input ng-model="alterFriendName" type="text" value=""/></td> &nbsp;|&nbsp; 
+			        <td><strong>链接地址 : </strong><input ng-model="alterFriendSrc" type="text" value=""/></td>
+			    </tr>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button ng-click="alterLinkSubmit()" type="button" class="btn btn-primary"  data-dismiss="modal">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</form>
+<!-- 模态框 ]] -->
+

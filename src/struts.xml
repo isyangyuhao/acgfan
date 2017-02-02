@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+<!-- 	<constant name="struts.multipart.saveDir" value="/WEB-INF/public"/>
+ -->    
+    <package name="default" namespace="/" extends="struts-default">
+		
+		<!-- 配置自定义拦截器栈 -->
+		<interceptors>
+			<interceptor name="loginInterceptor" class="org.acg.interceptor.LoginInterceptor"></interceptor>
+			<interceptor-stack name="loginInterceptorStack">
+				<interceptor-ref name="loginInterceptor"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+			<interceptor-stack name="myUploadInterceptorStack">
+				<interceptor-ref name="fileUpload">
+					<param name="maximumSize">10485750</param><!-- 单位：字节 -->
+					<param name="allowedTypes">image/bmp,image/png,image/gif,image/jpeg,image/pjpeg</param>
+					<param name="allowExtensions">bmp,png,gif,jpeg,pjpeg</param>
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack">
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+	
+		<!-- 配置全局结果集 -->
+		<global-results>
+			<result name="index" type="redirect">/index.jsp</result>
+			<result name="no-login" type="redirect">account-login-show</result>
+		</global-results>
+		
+	<!-- 账户相关控制器 [[ -->
+		<action name="account-*-show" class="accountAction" method="{1}Show">
+			<result name="account-login">/WEB-INF/views/account/login.jsp</result>
+			<result name="account-question">/WEB-INF/views/account/question.jsp</result>
+			<result name="account-edit">/WEB-INF/views/account/edit.jsp</result>
+			<result name="account-myself">/WEB-INF/views/account/myself.jsp</result>
+			<result name="account-collect">/WEB-INF/views/account/collect.jsp</result>
+		</action>
+		<action name="account-*-ajax" class="accountAction" method="{1}Ajax">
+			<result type="stream" name="account-ajax-username">
+				<param name="contentType">text/html</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="account-*-execute" class="accountAction" method="{1}Execute">
+			<interceptor-ref name="myUploadInterceptorStack"></interceptor-ref>
+			<result name="account-login" type="redirect">/index.jsp</result>
+			<result name="account-register">/WEB-INF/views/account/register.jsp</result>
+			<result name="account-exit">/index.jsp</result>
+			<result name="account-error">/error.jsp</result>
+			<result name="account-success">/WEB-INF/views/account/success.jsp</result>
+			<result name="account-index" type="redirect">/index.jsp</result>
+			<result name="account-myself">/WEB-INF/views/account/myself.jsp</result>
+		</action>
+	<!-- 账户相关控制器 ]] -->
+		
+	<!-- 视频主站相关控制器 [[ -->
+		<action name="index-*-show" class="indexAction" method="{1}Show">
+			<result name="index-index">/WEB-INF/views/index/index_content.jsp</result>
+			<result name="index-play">/WEB-INF/views/index/play.jsp</result>
+			<result name="index-more">/WEB-INF/views/index/more.jsp</result>
+		</action>
+		<action name="index-*-execute" class="indexAction" method="{1}Execute">
+			<result name="index-search">/WEB-INF/views/index/search.jsp</result>
+			<result name="account-collect">/WEB-INF/views/account/collect.jsp</result>
+		</action>
+		<action name="index-*-ajax" class="indexAction" method="{1}Ajax">
+			<result type="stream" name="index-ajax-comment">
+				<param name="contentType">text/html</param>
+				<param name="inputName">inputStream</param>
+			</result>
+			<result type="stream" name="index-ajax-like">
+				<param name="contentType">text/html</param>
+				<param name="inputName">inputStream</param>
+			</result>
+			<result type="stream" name="index-ajax-danmu">
+				<param name="contentType">text/html</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	<!-- 视频主站相关控制器 ]] -->
+	
+	<!-- 周边商城相关控制器 [[ -->
+		<action name="shop-*-show" class="shopAction" method="{1}Show">
+			<result name="shop-shop">/WEB-INF/views/shop/shop.jsp</result>
+			<result name="shop-detail">/WEB-INF/views/shop/detail.jsp</result>
+		</action>
+		<action name="shop-*-execute" class="shopAction" method="{1}Execute">
+		</action>
+	<!-- 周边商城相关控制器 ]] -->
+		
+	<!-- 画板相关控制器 [[ -->
+		<action name="palette-*-show" class="paletteAction" method="{1}Show">
+			<result name="palette-palette">/WEB-INF/views/palette/palette.jsp</result>
+			<result name="palette-detail">/WEB-INF/views/palette/detail.jsp</result>
+			<result name="palette-more">/WEB-INF/views/palette/more.jsp</result>			
+		</action>
+		<action name="palette-*-execute" class="paletteAction" method="{1}Execute">
+		</action>	
+	<!-- 画板相关控制器 ]] -->	
+	
+	<!-- 游戏中心相关控制器 [[ -->
+	<action name="game-*-show" class="gameAction" method="{1}Show">
+		<result name="game-game">/WEB-INF/views/game/game.jsp</result>
+	</action>
+	<!-- 游戏中心相关控制器 ]] -->
+	
+	<!-- 后台管理相关控制器 [[ -->
+	<action name="admin-login" class="baseAdminAction" method="adminLogin">
+		<result name="admin-login-success" type="redirect">/admin/index.html</result>
+		<result name="admin-login-error" type="redirect">/error.jsp</result>
+	</action>
+	<action name="admin-logout" class="baseAdminAction" method="adminLogout">
+		<result name="admin-logout" type="redirect">/index-index-show</result>
+	</action>
+	<action name="admin-*-ajax" class="baseAdminAction" method="{1}Ajax">
+		<result type="stream" name="ajax">
+			<param name="contentType">text/html</param>
+			<param name="inputName">inputStream</param>
+		</result>
+	</action>
+	<action name="video-*-ajax" class="videoAdminAction" method="{1}Ajax">
+		<result type="stream" name="ajax">
+			<param name="contentType">text/html</param>
+			<param name="inputName">inputStream</param>
+		</result>
+	</action>
+	<action name="other-*-ajax" class="otherAdminAction" method="{1}Ajax">
+		<result type="stream" name="ajax">
+			<param name="contentType">text/html</param>
+			<param name="inputName">inputStream</param>
+		</result>
+	</action>
+	<!-- 后台管理相关控制器 ]] -->
+		
+    </package>
+
+</struts>
